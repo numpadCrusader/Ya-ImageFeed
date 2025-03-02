@@ -9,17 +9,22 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
     
+    // MARK: - IBOutlet
+    
     @IBOutlet private var tableView: UITableView!
+    
+    // MARK: - Private Properties
     
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
+        formatter.dateFormat = "d MMMM yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,17 +36,20 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController {
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let image = UIImage(named: "\(indexPath.row)") else {
+        guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
         }
         
         cell.photoView.image = image
         cell.dateLabel.text = dateFormatter.string(from: Date())
         
-        let likeButtonImageName = (indexPath.row % 2 == 0) ? "like_button_on" : "like_button_off"
-        cell.likeButton.setImage(UIImage(named: likeButtonImageName), for: .normal)
+        let isLiked = indexPath.row % 2 == 0
+        let likeImageName = isLiked ? "like_button_on" : "like_button_off"
+        cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
     }
 }
+
+// MARK: - UITableViewDataSource
 
 extension ImagesListViewController: UITableViewDataSource {
     
@@ -61,6 +69,8 @@ extension ImagesListViewController: UITableViewDataSource {
         return imageListCell
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension ImagesListViewController: UITableViewDelegate {
     
