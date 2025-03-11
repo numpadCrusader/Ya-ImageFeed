@@ -9,9 +9,13 @@ import UIKit
 
 final class ImagesListCell: UITableViewCell {
     
+    // MARK: - IBOutlet
+    
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var photoView: UIImageView!
     @IBOutlet var dateLabel: UILabel!
+    
+    // MARK: - Public Properties
     
     static let reuseIdentifier = "ImagesListCell"
 }
