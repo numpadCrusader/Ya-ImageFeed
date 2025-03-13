@@ -49,6 +49,13 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		048A7F6B2D83545F00E5B157 /* SingleImage */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SingleImage;
+			sourceTree = "<group>";
+		};
 		04964F232D590E7600E61033 /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +84,7 @@
 		04BA66662D5514D5006F9DC5 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				048A7F6B2D83545F00E5B157 /* SingleImage */,
 				046F24002D80B278007D2F29 /* Profile */,
 				04964F232D590E7600E61033 /* ImagesList */,
 				04BA66672D5514D5006F9DC5 /* AppDelegate.swift */,
