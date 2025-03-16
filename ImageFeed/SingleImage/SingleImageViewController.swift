@@ -11,5 +11,21 @@ final class SingleImageViewController: UIViewController {
     
     // MARK: - IBOutlet
     
-    @IBOutlet var singleImageView: UIImageView!
+    @IBOutlet private var singleImageView: UIImageView!
+    
+    // MARK: - Public Properties
+    
+    var image: UIImage? {
+        didSet {
+            guard isViewLoaded else { return }
+            singleImageView.image = image
+        }
+    }
+    
+    // MARK: - UIViewController
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        singleImageView.image = image
+    }
 }
