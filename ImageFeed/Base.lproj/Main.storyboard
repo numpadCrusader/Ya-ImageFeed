@@ -155,16 +155,54 @@
                                     <action selector="didTapBackButton:" destination="im0-2i-Zpv" eventType="touchUpInside" id="VRs-0X-7qW"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eHo-UG-dPH">
+                                <rect key="frame" x="296" y="796" width="50" height="50"/>
+                                <color key="backgroundColor" name="YP Red"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="ICA-ID-sJ7"/>
+                                    <constraint firstAttribute="height" constant="50" id="TcL-RC-cid"/>
+                                </constraints>
+                                <color key="tintColor" name="YP White"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Sharing"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUs-JV-2M5">
+                                <rect key="frame" x="68" y="796" width="50" height="50"/>
+                                <color key="backgroundColor" name="YP Red"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="9NI-V4-fa5"/>
+                                    <constraint firstAttribute="height" constant="50" id="bxK-Vx-1g2"/>
+                                </constraints>
+                                <color key="tintColor" name="YP White"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="like_off_30px"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="FTu-N7-crq"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="top" secondItem="FTu-N7-crq" secondAttribute="top" constant="8" id="3O6-xZ-nwZ"/>
+                            <constraint firstItem="DUs-JV-2M5" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" constant="68" id="AfR-RP-AGu"/>
+                            <constraint firstAttribute="bottom" secondItem="eHo-UG-dPH" secondAttribute="bottom" constant="50" id="I3S-J9-jt0"/>
+                            <constraint firstAttribute="bottom" secondItem="DUs-JV-2M5" secondAttribute="bottom" constant="50" id="OeC-6K-RtA"/>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" constant="8" id="PdC-Rm-v3d"/>
-                            <constraint firstItem="2t9-FQ-px2" firstAttribute="top" secondItem="BZU-Cm-Bfy" secondAttribute="top" id="Q6S-38-Qlu"/>
+                            <constraint firstItem="2t9-FQ-px2" firstAttribute="top" secondItem="FTu-N7-crq" secondAttribute="top" id="Q6S-38-Qlu"/>
                             <constraint firstItem="FTu-N7-crq" firstAttribute="trailing" secondItem="2t9-FQ-px2" secondAttribute="trailing" id="a5Z-3Y-nfO"/>
-                            <constraint firstAttribute="bottom" secondItem="2t9-FQ-px2" secondAttribute="bottom" id="axh-OG-lcs"/>
+                            <constraint firstItem="FTu-N7-crq" firstAttribute="bottom" secondItem="2t9-FQ-px2" secondAttribute="bottom" id="axh-OG-lcs"/>
                             <constraint firstItem="2t9-FQ-px2" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" id="eoB-hs-hW4"/>
+                            <constraint firstItem="FTu-N7-crq" firstAttribute="trailing" secondItem="eHo-UG-dPH" secondAttribute="trailing" constant="68" id="gDp-n7-0AD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Bj2-Sx-80O"/>
@@ -256,8 +294,10 @@
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
+        <image name="Sharing" width="30" height="30"/>
         <image name="back_button" width="24" height="24"/>
         <image name="like_button_on" width="44" height="44"/>
+        <image name="like_off_30px" width="30" height="30"/>
         <image name="log_out_button" width="44" height="44"/>
         <image name="profile_avatar" width="70" height="70"/>
         <image name="tab_editorial_active" width="30" height="30"/>
@@ -267,6 +307,9 @@
         </namedColor>
         <namedColor name="YP Gray">
             <color red="0.68235294117647061" green="0.68627450980392157" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="YP Red">
+            <color red="0.96078431372549022" green="0.41960784313725491" blue="0.42352941176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
