@@ -132,8 +132,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2t9-FQ-px2">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-IH-pzq">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eM2-0j-Ws9">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -156,7 +156,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eHo-UG-dPH">
-                                <rect key="frame" x="296" y="796" width="50" height="50"/>
+                                <rect key="frame" x="296" y="830" width="50" height="50"/>
                                 <color key="backgroundColor" name="YP Red"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="ICA-ID-sJ7"/>
@@ -176,7 +176,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUs-JV-2M5">
-                                <rect key="frame" x="68" y="796" width="50" height="50"/>
+                                <rect key="frame" x="68" y="830" width="50" height="50"/>
                                 <color key="backgroundColor" name="YP Red"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="9NI-V4-fa5"/>
@@ -201,12 +201,12 @@
                         <constraints>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="top" secondItem="FTu-N7-crq" secondAttribute="top" constant="8" id="3O6-xZ-nwZ"/>
                             <constraint firstItem="DUs-JV-2M5" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" constant="68" id="AfR-RP-AGu"/>
-                            <constraint firstAttribute="bottom" secondItem="eHo-UG-dPH" secondAttribute="bottom" constant="50" id="I3S-J9-jt0"/>
-                            <constraint firstAttribute="bottom" secondItem="DUs-JV-2M5" secondAttribute="bottom" constant="50" id="OeC-6K-RtA"/>
+                            <constraint firstItem="FTu-N7-crq" firstAttribute="bottom" secondItem="eHo-UG-dPH" secondAttribute="bottom" constant="16" id="I3S-J9-jt0"/>
+                            <constraint firstItem="FTu-N7-crq" firstAttribute="bottom" secondItem="DUs-JV-2M5" secondAttribute="bottom" constant="16" id="OeC-6K-RtA"/>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" constant="8" id="PdC-Rm-v3d"/>
-                            <constraint firstItem="2t9-FQ-px2" firstAttribute="top" secondItem="FTu-N7-crq" secondAttribute="top" id="Q6S-38-Qlu"/>
+                            <constraint firstItem="2t9-FQ-px2" firstAttribute="top" secondItem="BZU-Cm-Bfy" secondAttribute="top" id="Q6S-38-Qlu"/>
                             <constraint firstItem="FTu-N7-crq" firstAttribute="trailing" secondItem="2t9-FQ-px2" secondAttribute="trailing" id="a5Z-3Y-nfO"/>
-                            <constraint firstItem="FTu-N7-crq" firstAttribute="bottom" secondItem="2t9-FQ-px2" secondAttribute="bottom" id="axh-OG-lcs"/>
+                            <constraint firstAttribute="bottom" secondItem="2t9-FQ-px2" secondAttribute="bottom" id="axh-OG-lcs"/>
                             <constraint firstItem="2t9-FQ-px2" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" id="eoB-hs-hW4"/>
                             <constraint firstItem="FTu-N7-crq" firstAttribute="trailing" secondItem="eHo-UG-dPH" secondAttribute="trailing" constant="68" id="gDp-n7-0AD"/>
                         </constraints>
@@ -214,7 +214,7 @@
                     <navigationItem key="navigationItem" id="Bj2-Sx-80O"/>
                     <connections>
                         <outlet property="scrollView" destination="2t9-FQ-px2" id="3aP-L8-Run"/>
-                        <outlet property="singleImageView" destination="OnQ-IH-pzq" id="gwo-Jm-tvc"/>
+                        <outlet property="singleImageView" destination="eM2-0j-Ws9" id="wxf-BZ-1NK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y62-No-dso" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
