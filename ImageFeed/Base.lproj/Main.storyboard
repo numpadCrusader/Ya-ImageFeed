@@ -129,9 +129,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-IH-pzq">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2t9-FQ-px2">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                            </imageView>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-IH-pzq">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <viewLayoutGuide key="contentLayoutGuide" id="NJ1-KG-DlK"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="dya-Cg-u7m"/>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gOY-Q7-54g">
                                 <rect key="frame" x="8" y="8" width="48" height="48"/>
                                 <constraints>
@@ -150,20 +158,21 @@
                         <constraints>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="top" secondItem="FTu-N7-crq" secondAttribute="top" constant="8" id="3O6-xZ-nwZ"/>
                             <constraint firstItem="gOY-Q7-54g" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" constant="8" id="PdC-Rm-v3d"/>
-                            <constraint firstItem="OnQ-IH-pzq" firstAttribute="top" secondItem="BZU-Cm-Bfy" secondAttribute="top" id="TCP-bD-VMg"/>
-                            <constraint firstAttribute="trailing" secondItem="OnQ-IH-pzq" secondAttribute="trailing" id="TGa-8e-uBe"/>
-                            <constraint firstAttribute="bottom" secondItem="OnQ-IH-pzq" secondAttribute="bottom" id="VKa-Zb-k2c"/>
-                            <constraint firstItem="OnQ-IH-pzq" firstAttribute="leading" secondItem="BZU-Cm-Bfy" secondAttribute="leading" id="gPN-18-ozx"/>
+                            <constraint firstItem="2t9-FQ-px2" firstAttribute="top" secondItem="BZU-Cm-Bfy" secondAttribute="top" id="Q6S-38-Qlu"/>
+                            <constraint firstItem="FTu-N7-crq" firstAttribute="trailing" secondItem="2t9-FQ-px2" secondAttribute="trailing" id="a5Z-3Y-nfO"/>
+                            <constraint firstAttribute="bottom" secondItem="2t9-FQ-px2" secondAttribute="bottom" id="axh-OG-lcs"/>
+                            <constraint firstItem="2t9-FQ-px2" firstAttribute="leading" secondItem="FTu-N7-crq" secondAttribute="leading" id="eoB-hs-hW4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Bj2-Sx-80O"/>
                     <connections>
+                        <outlet property="scrollView" destination="2t9-FQ-px2" id="3aP-L8-Run"/>
                         <outlet property="singleImageView" destination="OnQ-IH-pzq" id="gwo-Jm-tvc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y62-No-dso" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1097" y="-382"/>
+            <point key="canvasLocation" x="1095.6521739130435" y="-382.36607142857139"/>
         </scene>
         <!--Profile-->
         <scene sceneID="aPy-l0-NVb">
