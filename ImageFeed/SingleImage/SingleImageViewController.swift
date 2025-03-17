@@ -45,6 +45,16 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func didTapLikeButton(_ sender: Any) {
+        // TODO: - Добавить логику при нажатии на кнопку
+    }
+    
+    @IBAction func didTapShareButton(_ sender: Any) {
+        guard let image else { return }
+        let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityVC, animated: true)
+    }
+    
     // MARK: - Private Methods
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
