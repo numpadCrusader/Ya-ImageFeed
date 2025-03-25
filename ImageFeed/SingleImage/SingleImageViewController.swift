@@ -58,6 +58,11 @@ final class SingleImageViewController: UIViewController {
     // MARK: - Private Methods
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
+        rescaleImageInScrollView(image: image)
+        centerImageInScrollView()
+    }
+    
+    private func rescaleImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
         view.layoutIfNeeded()
@@ -65,9 +70,13 @@ final class SingleImageViewController: UIViewController {
         let imageSize = image.size
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
+        let scale = min(maxZoomScale, max(minZoomScale, max(hScale, vScale)))
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
+    }
+    
+    private func centerImageInScrollView() {
+        let visibleRectSize = scrollView.bounds.size
         let newContentSize = scrollView.contentSize
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
@@ -78,7 +87,21 @@ final class SingleImageViewController: UIViewController {
 // MARK: - UIScrollViewDelegate
 
 extension SingleImageViewController: UIScrollViewDelegate {
+    
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return singleImageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let contentSize = scrollView.contentSize
+        let scrollViewSize = scrollView.bounds.size
+        
+        let horizontalInset = max((scrollViewSize.width - contentSize.width) / 2, 0)
+        scrollView.contentInset.left = horizontalInset
+        scrollView.contentInset.right = horizontalInset
+
+        let verticalInset = max((scrollViewSize.height - contentSize.height) / 2, 0)
+        scrollView.contentInset.top = verticalInset
+        scrollView.contentInset.bottom = verticalInset
     }
 }
