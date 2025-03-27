@@ -7,17 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		046F24022D80B29E007D2F29 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046F24012D80B29E007D2F29 /* ProfileViewController.swift */; };
+		048A7F6E2D8354D500E5B157 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048A7F6D2D8354D500E5B157 /* SingleImageViewController.swift */; };
 		04964F222D590E6300E61033 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04964F212D590E6300E61033 /* ImagesListCell.swift */; };
+		04B4F4872D92CD99003D2339 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4F4862D92CD99003D2339 /* UIColor+Extensions.swift */; };
+		04B4F4892D92D3C5003D2339 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BA66702D5514D6006F9DC5 /* Assets.xcassets */; };
 		04BA66682D5514D5006F9DC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA66672D5514D5006F9DC5 /* AppDelegate.swift */; };
 		04BA666A2D5514D5006F9DC5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA66692D5514D5006F9DC5 /* SceneDelegate.swift */; };
 		04BA666C2D5514D5006F9DC5 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA666B2D5514D5006F9DC5 /* ImagesListViewController.swift */; };
 		04BA666F2D5514D5006F9DC5 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 04BA666E2D5514D5006F9DC5 /* Base */; };
-		04BA66712D5514D6006F9DC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BA66702D5514D6006F9DC5 /* Assets.xcassets */; };
 		04BA66742D5514D6006F9DC5 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 04BA66732D5514D6006F9DC5 /* Base */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		046F24012D80B29E007D2F29 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		048A7F6D2D8354D500E5B157 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		04964F212D590E6300E61033 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		04B4F4862D92CD99003D2339 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		04BA66642D5514D5006F9DC5 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BA66672D5514D5006F9DC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04BA66692D5514D5006F9DC5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +45,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		046F24002D80B278007D2F29 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				046F24012D80B29E007D2F29 /* ProfileViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		048A7F6B2D83545F00E5B157 /* SingleImage */ = {
+			isa = PBXGroup;
+			children = (
+				048A7F6D2D8354D500E5B157 /* SingleImageViewController.swift */,
+			);
+			path = SingleImage;
+			sourceTree = "<group>";
+		};
 		04964F232D590E7600E61033 /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -46,6 +68,14 @@
 				04BA666B2D5514D5006F9DC5 /* ImagesListViewController.swift */,
 			);
 			path = ImagesList;
+			sourceTree = "<group>";
+		};
+		04B4F4852D92CD84003D2339 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				04B4F4862D92CD99003D2339 /* UIColor+Extensions.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		04BA665B2D5514D5006F9DC5 = {
@@ -67,6 +97,9 @@
 		04BA66662D5514D5006F9DC5 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				04B4F4852D92CD84003D2339 /* Helpers */,
+				048A7F6B2D83545F00E5B157 /* SingleImage */,
+				046F24002D80B278007D2F29 /* Profile */,
 				04964F232D590E7600E61033 /* ImagesList */,
 				04BA66672D5514D5006F9DC5 /* AppDelegate.swift */,
 				04BA66692D5514D5006F9DC5 /* SceneDelegate.swift */,
@@ -136,8 +169,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BA66712D5514D6006F9DC5 /* Assets.xcassets in Resources */,
 				04BA66742D5514D6006F9DC5 /* Base in Resources */,
+				04B4F4892D92D3C5003D2339 /* Assets.xcassets in Resources */,
 				04BA666F2D5514D5006F9DC5 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,9 +182,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				046F24022D80B29E007D2F29 /* ProfileViewController.swift in Sources */,
 				04BA666C2D5514D5006F9DC5 /* ImagesListViewController.swift in Sources */,
 				04964F222D590E6300E61033 /* ImagesListCell.swift in Sources */,
 				04BA66682D5514D5006F9DC5 /* AppDelegate.swift in Sources */,
+				04B4F4872D92CD99003D2339 /* UIColor+Extensions.swift in Sources */,
+				048A7F6E2D8354D500E5B157 /* SingleImageViewController.swift in Sources */,
 				04BA666A2D5514D5006F9DC5 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
