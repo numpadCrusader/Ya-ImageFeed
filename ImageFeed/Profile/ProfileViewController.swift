@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ProfileViewController.swift
 //  ImageFeed
 //
 //  Created by Nikita Khon on 11.03.2025.
