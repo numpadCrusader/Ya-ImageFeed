@@ -72,7 +72,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U0Z-yH-BTT">
-                                <rect key="frame" x="20" y="0.0" width="374" height="896"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="848"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -95,12 +95,12 @@
                         <viewLayoutGuide key="safeArea" id="bed-Ki-hXv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="U0Z-yH-BTT" secondAttribute="bottom" id="Abg-OC-hgS"/>
-                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="trailing" secondItem="FVv-4S-mRF" secondAttribute="trailingMargin" id="aPN-G4-b1f"/>
+                            <constraint firstAttribute="trailing" secondItem="U0Z-yH-BTT" secondAttribute="trailing" id="5a9-pF-Ibk"/>
+                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="top" secondItem="NlJ-Gm-APV" secondAttribute="bottom" id="E4j-pk-zTM"/>
                             <constraint firstItem="NlJ-Gm-APV" firstAttribute="top" secondItem="bed-Ki-hXv" secondAttribute="top" id="eOO-dr-DIu"/>
-                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="leading" secondItem="FVv-4S-mRF" secondAttribute="leadingMargin" id="g7Y-kJ-rHO"/>
-                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="top" secondItem="FVv-4S-mRF" secondAttribute="topMargin" id="inA-Pi-7yv"/>
                             <constraint firstItem="NlJ-Gm-APV" firstAttribute="leading" secondItem="bed-Ki-hXv" secondAttribute="leading" id="kRQ-4N-dVC"/>
+                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="leading" secondItem="FVv-4S-mRF" secondAttribute="leading" id="uSz-Hm-D4K"/>
+                            <constraint firstAttribute="bottom" secondItem="U0Z-yH-BTT" secondAttribute="bottom" id="zMB-zK-ZE0"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="U6S-Ey-fyh"/>
