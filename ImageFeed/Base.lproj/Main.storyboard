@@ -72,7 +72,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U0Z-yH-BTT">
-                                <rect key="frame" x="0.0" y="48" width="414" height="848"/>
+                                <rect key="frame" x="0.0" y="52" width="414" height="844"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -91,13 +91,20 @@
                                     <action selector="didTapBackButton:" destination="fxK-Gn-JAm" eventType="touchUpInside" id="72l-nY-boF"/>
                                 </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eQC-io-qEL">
+                                <rect key="frame" x="0.0" y="48" width="414" height="4"/>
+                                <color key="progressTintColor" name="YP Black"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bed-Ki-hXv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="U0Z-yH-BTT" secondAttribute="trailing" id="5a9-pF-Ibk"/>
-                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="top" secondItem="NlJ-Gm-APV" secondAttribute="bottom" id="E4j-pk-zTM"/>
+                            <constraint firstItem="eQC-io-qEL" firstAttribute="top" secondItem="NlJ-Gm-APV" secondAttribute="bottom" id="6I6-h0-jeK"/>
+                            <constraint firstItem="U0Z-yH-BTT" firstAttribute="top" secondItem="eQC-io-qEL" secondAttribute="bottom" id="E4j-pk-zTM"/>
+                            <constraint firstItem="bed-Ki-hXv" firstAttribute="trailing" secondItem="eQC-io-qEL" secondAttribute="trailing" id="KEP-fi-uG3"/>
                             <constraint firstItem="NlJ-Gm-APV" firstAttribute="top" secondItem="bed-Ki-hXv" secondAttribute="top" id="eOO-dr-DIu"/>
+                            <constraint firstItem="eQC-io-qEL" firstAttribute="leading" secondItem="bed-Ki-hXv" secondAttribute="leading" id="fb9-Bb-Wd4"/>
                             <constraint firstItem="NlJ-Gm-APV" firstAttribute="leading" secondItem="bed-Ki-hXv" secondAttribute="leading" id="kRQ-4N-dVC"/>
                             <constraint firstItem="U0Z-yH-BTT" firstAttribute="leading" secondItem="FVv-4S-mRF" secondAttribute="leading" id="uSz-Hm-D4K"/>
                             <constraint firstAttribute="bottom" secondItem="U0Z-yH-BTT" secondAttribute="bottom" id="zMB-zK-ZE0"/>
@@ -105,6 +112,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="U6S-Ey-fyh"/>
                     <connections>
+                        <outlet property="progressView" destination="eQC-io-qEL" id="yaX-AL-ia3"/>
                         <outlet property="webView" destination="U0Z-yH-BTT" id="Fx9-M1-yhN"/>
                     </connections>
                 </viewController>
