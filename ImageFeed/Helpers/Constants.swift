@@ -14,4 +14,5 @@ enum Constants {
     static let accessScope = ""
     static let unsplashApiBaseURLString = "https://api.unsplash.com"
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    static let unsplashTokenURLString = "https://unsplash.com/oauth/token"
 }
