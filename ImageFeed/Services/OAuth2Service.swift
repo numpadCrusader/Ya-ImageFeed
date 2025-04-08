@@ -21,7 +21,14 @@ final class OAuth2Service {
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let tokenRequest = makeOAuthTokenRequest(code: code) else {
+            print("URLRequest Error: Could not create auth token request")
             return
+        }
+        
+        let fulfillCompletionOnTheMainThread: (Result<String, Error>) -> Void = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
         }
         
         let task = URLSession.shared.data(for: tokenRequest) { result in
@@ -29,15 +36,15 @@ final class OAuth2Service {
                 case .success(let data):
                     do {
                         let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(responseBody.accessToken))
+                        fulfillCompletionOnTheMainThread(.success(responseBody.accessToken))
                     } catch {
-                        print("Decoding Error: Can't decode response body into JSON")
-                        completion(.failure(error))
+                        print("Decoding Error: Could not decode response body into JSON")
+                        fulfillCompletionOnTheMainThread(.failure(error))
                     }
                     
                 case .failure(let error):
                     print("Network Error: \(error.stringRepresentation)")
-                    completion(.failure(error))
+                    fulfillCompletionOnTheMainThread(.failure(error))
             }
         }
         
@@ -48,6 +55,7 @@ final class OAuth2Service {
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: Constants.unsplashTokenURLString) else {
+            print("URLComponents Error: Token url string is corrupted")
             return nil
         }
         
@@ -60,6 +68,7 @@ final class OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
+            print("URLComponents Error: Could not create url from components")
             return nil
         }
         

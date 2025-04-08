@@ -45,17 +45,18 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        vc.dismiss(animated: true)
+        
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
                 case .success(let accessToken):
                     self.oAuth2TokenStorage.storeAccessToken(accessToken)
-                    vc.dismiss(animated: true)
                     self.delegate?.didAuthenticate(self)
                     
                 case .failure(_):
-                    break
+                    print("Error: Could not fetch auth token")
             }
         }
     }

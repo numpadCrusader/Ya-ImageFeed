@@ -62,6 +62,7 @@ final class WebViewViewController: UIViewController {
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: Constants.unsplashAuthorizeURLString) else {
+            print("URLComponents Error: Authorize url string is corrupted")
             return
         }
         
@@ -73,6 +74,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
+            print("URLComponents Error: Could not create url from components")
             return
         }
         
@@ -87,6 +89,7 @@ final class WebViewViewController: UIViewController {
               let items = urlComponents.queryItems,
               let codeItem = items.first(where: { $0.name == "code" })
         else {
+            print("URLComponents Error: Could not extract \"code\" item from url")
             return nil
         }
         
