@@ -7,11 +7,20 @@
 
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController {
+    
+    // MARK: - Public Properties
+    
+    weak var delegate: AuthViewControllerDelegate?
     
     // MARK: - Private Properties
     
     private let showWebViewSegueIdentifier = "ShowWebView"
+    
     private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
     
     // MARK: - UIViewController
@@ -42,6 +51,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
                 case .success(let accessToken):
                     self.oAuth2TokenStorage.storeAccessToken(accessToken)
+                    vc.dismiss(animated: true)
+                    self.delegate?.didAuthenticate(self)
                     
                 case .failure(_):
                     break
