@@ -31,10 +31,12 @@ final class OAuth2Service {
                         let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
                         completion(.success(responseBody.accessToken))
                     } catch {
+                        print("Decoding Error: Can't decode response body into JSON")
                         completion(.failure(error))
                     }
                     
                 case .failure(let error):
+                    print("Network Error: \(error.stringRepresentation)")
                     completion(.failure(error))
             }
         }
