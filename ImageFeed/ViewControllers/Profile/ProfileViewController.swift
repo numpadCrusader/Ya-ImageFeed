@@ -54,6 +54,10 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
+    // MARK: - Private Properties
+    
+    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    
     // MARK: - UIViewController
     
     override func viewDidLoad() {
@@ -70,6 +74,10 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configure() {
+        ProfileService.shared.fetchProfile(oAuth2TokenStorage.token ?? "") { _ in
+            
+        }
+        
         view.backgroundColor = .assetYpBlack
         
         addSubviews()
