@@ -12,6 +12,7 @@ final class ProfileImageService {
     // MARK: - Public Properties
     
     static let shared = ProfileImageService()
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     // MARK: - Private Properties
     
@@ -48,6 +49,7 @@ final class ProfileImageService {
                         let userDTO = try SnakeCaseJSONDecoder().decode(UserDTO.self, from: data)
                         self.avatarURLString = userDTO.profileImage.small
                         fulfillCompletionOnTheMainThread(.success(userDTO.profileImage.small))
+                        postNotification(imageURL: userDTO.profileImage.small)
                     } catch {
                         print("Decoding Error: Could not decode response body into JSON")
                         fulfillCompletionOnTheMainThread(.failure(error))
@@ -75,5 +77,12 @@ final class ProfileImageService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    private func postNotification(imageURL: String) {
+        NotificationCenter.default.post(
+            name: ProfileImageService.didChangeNotification,
+            object: self,
+            userInfo: ["URL": imageURL])
     }
 }

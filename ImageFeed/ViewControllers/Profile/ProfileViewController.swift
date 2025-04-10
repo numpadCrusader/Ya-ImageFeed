@@ -58,6 +58,23 @@ final class ProfileViewController: UIViewController {
     
     private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    
+    // MARK: - Initializers
+    
+    override init(nibName: String?, bundle: Bundle?) {
+        super.init(nibName: nibName, bundle: bundle)
+        addObserver()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        addObserver()
+    }
+    
+    deinit {
+        removeObserver()
+    }
     
     // MARK: - UIViewController
     
@@ -66,10 +83,24 @@ final class ProfileViewController: UIViewController {
         configure()
     }
     
-    // MARK: - IBAction
+    // MARK: - Actions
     
-    @objc func didTapLogOutButton() {
+    @objc private func didTapLogOutButton() {
         // TODO: - Добавить логику при нажатии на кнопку
+    }
+    
+    @objc private func updateAvatar(notification: Notification) {
+        guard
+            isViewLoaded,
+            let userInfo = notification.userInfo,
+            let profileImageURL = userInfo["URL"] as? String,
+            let url = URL(string: profileImageURL)
+        else {
+            print("Error: Could not get profile image url from notification")
+            return
+        }
+        
+        // TODO [Sprint 11] Обновите аватар, используя Kingfisher
     }
     
     // MARK: - Private Methods
@@ -79,6 +110,8 @@ final class ProfileViewController: UIViewController {
         
         addSubviews()
         addConstraints()
+    
+        updateAvatar()
         updateLabels()
     }
     
@@ -125,5 +158,28 @@ final class ProfileViewController: UIViewController {
         fullNameLabel.text = profileService.profile?.name
         nicknameLabel.text = profileService.profile?.loginName
         statusLabel.text = profileService.profile?.bio
+    }
+    
+    private func updateAvatar() {
+        if let avatarURL = profileImageService.avatarURLString,
+           let url = URL(string: avatarURL) {
+            // TODO [Sprint 11]  Обновите аватар, если нотификация
+            // была опубликована до того, как мы подписались.
+        }
+    }
+    
+    private func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateAvatar(notification:)),
+            name: ProfileImageService.didChangeNotification,
+            object: nil)
+    }
+    
+    private func removeObserver() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: ProfileImageService.didChangeNotification,
+            object: nil)
     }
 }
