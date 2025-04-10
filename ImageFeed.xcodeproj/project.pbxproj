@@ -24,6 +24,7 @@
 		047AC72E2DA838B1009B19C4 /* SnakeCaseJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047AC72D2DA838B1009B19C4 /* SnakeCaseJSONDecoder.swift */; };
 		047AC7312DA83ABC009B19C4 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047AC7302DA83ABC009B19C4 /* ProfileViewModel.swift */; };
 		047AC7362DA848B3009B19C4 /* ProfileServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047AC7352DA848B3009B19C4 /* ProfileServiceError.swift */; };
+		047AC7382DA85B61009B19C4 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047AC7372DA85B61009B19C4 /* ProfileImageService.swift */; };
 		048A7F6E2D8354D500E5B157 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048A7F6D2D8354D500E5B157 /* SingleImageViewController.swift */; };
 		04964F222D590E6300E61033 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04964F212D590E6300E61033 /* ImagesListCell.swift */; };
 		04B4F4872D92CD99003D2339 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4F4862D92CD99003D2339 /* UIColor+Extensions.swift */; };
@@ -54,6 +55,7 @@
 		047AC72D2DA838B1009B19C4 /* SnakeCaseJSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeCaseJSONDecoder.swift; sourceTree = "<group>"; };
 		047AC7302DA83ABC009B19C4 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		047AC7352DA848B3009B19C4 /* ProfileServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceError.swift; sourceTree = "<group>"; };
+		047AC7372DA85B61009B19C4 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		048A7F6D2D8354D500E5B157 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		04964F212D590E6300E61033 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		04B4F4862D92CD99003D2339 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
@@ -99,9 +101,8 @@
 		04741B252DA435EF00588D80 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				04741B232DA435E900588D80 /* OAuth2Service.swift */,
-				04741B2D2DA543D800588D80 /* OAuth2TokenStorage.swift */,
-				047AC7292DA83704009B19C4 /* ProfileService.swift */,
+				047AC73A2DA85B7A009B19C4 /* Profile */,
+				047AC7392DA85B68009B19C4 /* OAuth2 */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -171,6 +172,24 @@
 				047AC7302DA83ABC009B19C4 /* ProfileViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		047AC7392DA85B68009B19C4 /* OAuth2 */ = {
+			isa = PBXGroup;
+			children = (
+				04741B2D2DA543D800588D80 /* OAuth2TokenStorage.swift */,
+				04741B232DA435E900588D80 /* OAuth2Service.swift */,
+			);
+			path = OAuth2;
+			sourceTree = "<group>";
+		};
+		047AC73A2DA85B7A009B19C4 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				047AC7372DA85B61009B19C4 /* ProfileImageService.swift */,
+				047AC7292DA83704009B19C4 /* ProfileService.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		048A7F6B2D83545F00E5B157 /* SingleImage */ = {
@@ -319,6 +338,7 @@
 				04741B2A2DA53A4E00588D80 /* OAuthTokenDTO.swift in Sources */,
 				04741B2E2DA543D800588D80 /* OAuth2TokenStorage.swift in Sources */,
 				047AC7362DA848B3009B19C4 /* ProfileServiceError.swift in Sources */,
+				047AC7382DA85B61009B19C4 /* ProfileImageService.swift in Sources */,
 				04741B242DA435E900588D80 /* OAuth2Service.swift in Sources */,
 				04B4F4872D92CD99003D2339 /* UIColor+Extensions.swift in Sources */,
 				04741B302DA5519300588D80 /* NetworkError.swift in Sources */,
