@@ -57,6 +57,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     
     private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     // MARK: - UIViewController
     
@@ -73,15 +74,12 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private func configure() {
-        ProfileService.shared.fetchProfile(oAuth2TokenStorage.token ?? "") { _ in
-            
-        }
-        
+    private func configure() {        
         view.backgroundColor = .assetYpBlack
         
         addSubviews()
         addConstraints()
+        updateLabels()
     }
     
     private func addSubviews() {
@@ -121,5 +119,11 @@ final class ProfileViewController: UIViewController {
             statusLabel.leadingAnchor.constraint(equalTo: avatarImage.leadingAnchor),
             statusLabel.topAnchor.constraint(equalTo: nicknameLabel.bottomAnchor, constant: 8)
         ])
+    }
+    
+    private func updateLabels() {
+        fullNameLabel.text = profileService.profile?.name
+        nicknameLabel.text = profileService.profile?.loginName
+        statusLabel.text = profileService.profile?.bio
     }
 }

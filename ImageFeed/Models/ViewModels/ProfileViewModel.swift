@@ -13,3 +13,13 @@ struct ProfileViewModel {
     let loginName: String
     let bio: String?
 }
+
+extension ProfileViewModel {
+    
+    init(from profileDTO: ProfileDTO) {
+        username = profileDTO.username
+        name = "\(profileDTO.firstName) \(profileDTO.lastName ?? "")"
+        loginName = "@\(profileDTO.username)"
+        bio = profileDTO.bio
+    }
+}

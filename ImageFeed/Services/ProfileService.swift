@@ -16,7 +16,9 @@ final class ProfileService {
     // MARK: - Private Properties
     
     private let urlSession = URLSession.shared
+    
     private var task: URLSessionTask?
+    private(set) var profile: ProfileViewModel?
     
     // MARK: - Initializers
     
@@ -41,13 +43,15 @@ final class ProfileService {
             }
         }
         
-        let task = urlSession.data(for: profileRequest) { result in
+        let task = urlSession.data(for: profileRequest) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
                 case .success(let data):
                     do {
-                        let responseBody = try SnakeCaseJSONDecoder().decode(ProfileDTO.self, from: data)
-                        print(responseBody)
-                        fulfillCompletionOnTheMainThread(.success(responseBody))
+                        let profileDTO = try SnakeCaseJSONDecoder().decode(ProfileDTO.self, from: data)
+                        self.profile = ProfileViewModel(from: profileDTO)
+                        fulfillCompletionOnTheMainThread(.success(profileDTO))
                     } catch {
                         print("Decoding Error: Could not decode response body into JSON")
                         fulfillCompletionOnTheMainThread(.failure(error))
