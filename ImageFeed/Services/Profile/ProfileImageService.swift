@@ -40,23 +40,16 @@ final class ProfileImageService {
             }
         }
         
-        let task = urlSession.data(for: profileRequest) { [weak self] result in
+        let task = urlSession.objectTask(for: profileRequest) { [weak self] (result: Result<UserDTO, Error>) in
             guard let self = self else { return }
             
             switch result {
-                case .success(let data):
-                    do {
-                        let userDTO = try SnakeCaseJSONDecoder().decode(UserDTO.self, from: data)
-                        self.avatarURLString = userDTO.profileImage.small
-                        fulfillCompletionOnTheMainThread(.success(userDTO.profileImage.small))
-                        postNotification(imageURL: userDTO.profileImage.small)
-                    } catch {
-                        print("Decoding Error: Could not decode response body into JSON")
-                        fulfillCompletionOnTheMainThread(.failure(error))
-                    }
+                case .success(let userDTO):
+                    self.avatarURLString = userDTO.profileImage.small
+                    fulfillCompletionOnTheMainThread(.success(userDTO.profileImage.small))
+                    postNotification(imageURL: userDTO.profileImage.small)
                     
                 case .failure(let error):
-                    print("Network Error: \(error.stringRepresentation)")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }

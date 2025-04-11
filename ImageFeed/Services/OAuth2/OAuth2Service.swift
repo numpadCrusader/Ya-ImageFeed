@@ -51,19 +51,14 @@ final class OAuth2Service {
             }
         }
         
-        let task = urlSession.data(for: tokenRequest) { result in
+        let task = urlSession.objectTask(for: tokenRequest) { [weak self] (result: Result<OAuthTokenDTO, Error>) in
+            guard let self = self else { return }
+            
             switch result {
-                case .success(let data):
-                    do {
-                        let responseBody = try SnakeCaseJSONDecoder().decode(OAuthTokenDTO.self, from: data)
-                        fulfillCompletionOnTheMainThread(.success(responseBody.accessToken))
-                    } catch {
-                        print("Decoding Error: Could not decode response body into JSON")
-                        fulfillCompletionOnTheMainThread(.failure(error))
-                    }
+                case .success(let oAuthTokenDTO):
+                    fulfillCompletionOnTheMainThread(.success(oAuthTokenDTO.accessToken))
                     
                 case .failure(let error):
-                    print("Network Error: \(error.stringRepresentation)")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }

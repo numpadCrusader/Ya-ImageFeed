@@ -43,22 +43,15 @@ final class ProfileService {
             }
         }
         
-        let task = urlSession.data(for: profileRequest) { [weak self] result in
+        let task = urlSession.objectTask(for: profileRequest) { [weak self] (result: Result<ProfileDTO, Error>) in
             guard let self = self else { return }
             
             switch result {
-                case .success(let data):
-                    do {
-                        let profileDTO = try SnakeCaseJSONDecoder().decode(ProfileDTO.self, from: data)
-                        self.profile = ProfileViewModel(from: profileDTO)
-                        fulfillCompletionOnTheMainThread(.success(profileDTO))
-                    } catch {
-                        print("Decoding Error: Could not decode response body into JSON")
-                        fulfillCompletionOnTheMainThread(.failure(error))
-                    }
+                case .success(let profileDTO):
+                    self.profile = ProfileViewModel(from: profileDTO)
+                    fulfillCompletionOnTheMainThread(.success(profileDTO))
                     
                 case .failure(let error):
-                    print("Network Error: \(error.stringRepresentation)")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }
