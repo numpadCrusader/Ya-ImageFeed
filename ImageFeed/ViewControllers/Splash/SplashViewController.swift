@@ -23,11 +23,17 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let token = oAuth2TokenStorage.token {
-            fetchProfile(token: token)
-        } else {
+        guard oAuth2TokenStorage.isTokenFresh else {
             performSegue(withIdentifier: showAuthenticationSegueIdentifier, sender: nil)
+            return
         }
+        
+        guard let token = oAuth2TokenStorage.token else {
+            performSegue(withIdentifier: showAuthenticationSegueIdentifier, sender: nil)
+            return
+        }
+        
+        fetchProfile(token: token)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
