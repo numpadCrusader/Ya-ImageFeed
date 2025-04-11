@@ -12,5 +12,5 @@ struct UserDTO: Decodable {
 }
 
 struct ProfileImage: Decodable {
-    let small: String
+    let medium: String
 }

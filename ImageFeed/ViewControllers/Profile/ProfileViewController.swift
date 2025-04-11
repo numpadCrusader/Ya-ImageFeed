@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -15,7 +16,8 @@ final class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "profile_avatar")
+        imageView.layer.cornerRadius = 35
+        imageView.layer.masksToBounds = true
         return imageView
     }()
     
@@ -140,7 +142,7 @@ final class ProfileViewController: UIViewController {
             return
         }
         
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        avatarImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder_avatar"))
     }
     
     private func addObserver() {
