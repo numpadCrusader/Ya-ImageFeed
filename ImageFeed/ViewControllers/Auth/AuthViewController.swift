@@ -38,6 +38,20 @@ final class AuthViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
+    
+    // MARK: - Private Properties
+    
+    private func showErrorAlert() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
+        alertController.addAction(okAction)
+
+        present(alertController, animated: true, completion: nil)
+    }
 }
 
 // MARK: - WebViewViewControllerDelegate
@@ -60,6 +74,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     
                 case .failure(_):
                     print("Error: Could not fetch auth token")
+                    self.showErrorAlert()
             }
         }
     }

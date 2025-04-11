@@ -47,7 +47,7 @@ final class ProfileImageService {
                 case .success(let userDTO):
                     self.avatarURLString = userDTO.profileImage.small
                     fulfillCompletionOnTheMainThread(.success(userDTO.profileImage.small))
-                    postNotification(imageURL: userDTO.profileImage.small)
+                    self.postNotification(imageURL: userDTO.profileImage.small)
                     
                 case .failure(let error):
                     fulfillCompletionOnTheMainThread(.failure(error))

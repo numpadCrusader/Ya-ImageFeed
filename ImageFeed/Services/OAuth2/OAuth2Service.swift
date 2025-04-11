@@ -51,9 +51,7 @@ final class OAuth2Service {
             }
         }
         
-        let task = urlSession.objectTask(for: tokenRequest) { [weak self] (result: Result<OAuthTokenDTO, Error>) in
-            guard let self = self else { return }
-            
+        let task = urlSession.objectTask(for: tokenRequest) { (result: Result<OAuthTokenDTO, Error>) in
             switch result {
                 case .success(let oAuthTokenDTO):
                     fulfillCompletionOnTheMainThread(.success(oAuthTokenDTO.accessToken))
