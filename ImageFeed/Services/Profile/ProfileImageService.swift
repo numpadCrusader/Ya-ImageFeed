@@ -50,6 +50,7 @@ final class ProfileImageService {
                     self.postNotification(imageURL: userDTO.profileImage.medium)
                     
                 case .failure(let error):
+                    print("ProfileService Error: Could not fetch profile image")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }
@@ -62,7 +63,7 @@ final class ProfileImageService {
     
     private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
         guard let url = URL(string: "\(Constants.unsplashApiBaseURLString)/users/\(username)") else {
-            print("URL Error: Profile url is corrupted")
+            print("URL Error: Profile image url is corrupted")
             return nil
         }
         

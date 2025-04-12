@@ -97,7 +97,7 @@ final class SplashViewController: UIViewController {
                     self.switchToTabBarController()
                     
                 case .failure:
-                    print("Error: Could not fetch profile")
+                    break
             }
         }
     }

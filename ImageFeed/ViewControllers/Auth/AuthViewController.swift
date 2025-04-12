@@ -73,7 +73,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     self.delegate?.didAuthenticate(self)
                     
                 case .failure(_):
-                    print("Error: Could not fetch auth token")
                     self.showErrorAlert()
             }
         }

@@ -28,7 +28,7 @@ final class OAuth2Service {
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {
-            print("OAuth2ServiceError Error: Overlapping request")
+            print("OAuth2Service Error: Overlapping request")
             completion(.failure(OAuth2ServiceError.invalidRequest))
             return
         }
@@ -37,7 +37,7 @@ final class OAuth2Service {
         lastCode = code
         
         guard let tokenRequest = makeOAuthTokenRequest(code: code) else {
-            print("OAuth2ServiceError Error: Could not create auth token request")
+            print("OAuth2Service Error: Could not create auth token request")
             completion(.failure(OAuth2ServiceError.invalidRequest))
             return
         }
@@ -57,6 +57,7 @@ final class OAuth2Service {
                     fulfillCompletionOnTheMainThread(.success(oAuthTokenDTO.accessToken))
                     
                 case .failure(let error):
+                    print("OAuth2Service Error: Could not fetch auth token")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }

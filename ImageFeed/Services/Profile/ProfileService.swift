@@ -52,6 +52,7 @@ final class ProfileService {
                     fulfillCompletionOnTheMainThread(.success(profileDTO))
                     
                 case .failure(let error):
+                    print("ProfileService Error: Could not fetch profile")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }
