@@ -17,6 +17,12 @@ protocol OAuth2TokenStorageProtocol {
 
 final class OAuth2TokenStorage {
     
+    // MARK: - Public Properties
+    
+    static let shared = OAuth2TokenStorage()
+    
+    // MARK: - Private Properties
+    
     private let userDefaults: UserDefaults = .standard
     private let keyChain: KeychainWrapper = .standard
     
@@ -24,6 +30,10 @@ final class OAuth2TokenStorage {
         case accessToken
         case isTokenFresh
     }
+    
+    // MARK: - Initializers
+    
+    private init() {}
 }
 
 // MARK: - OAuth2TokenStorageProtocol

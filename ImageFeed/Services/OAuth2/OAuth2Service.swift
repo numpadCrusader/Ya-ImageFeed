@@ -16,6 +16,7 @@ final class OAuth2Service {
     // MARK: - Private Properties
     
     private let urlSession = URLSession.shared
+    
     private var task: URLSessionTask?
     private var lastCode: String?
     

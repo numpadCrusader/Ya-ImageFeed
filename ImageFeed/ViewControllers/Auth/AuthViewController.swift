@@ -21,7 +21,7 @@ final class AuthViewController: UIViewController {
     
     private let showWebViewSegueIdentifier = "ShowWebView"
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     
     // MARK: - UIViewController
     
@@ -63,9 +63,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
         UIBlockingProgressHUD.show()
         
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self = self else { return }
-            
             UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
             
             switch result {
                 case .success(let accessToken):

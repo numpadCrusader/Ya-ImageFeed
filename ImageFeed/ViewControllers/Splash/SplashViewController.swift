@@ -21,7 +21,7 @@ final class SplashViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
@@ -87,9 +87,8 @@ final class SplashViewController: UIViewController {
         UIBlockingProgressHUD.show()
         
         profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else { return }
-            
             UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
             
             switch result {
                 case .success(let profileDTO):
