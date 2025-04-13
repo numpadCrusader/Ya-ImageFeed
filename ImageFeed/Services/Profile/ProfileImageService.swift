@@ -51,7 +51,7 @@ final class ProfileImageService {
                 case .success(let userDTO):
                     self.avatarURLString = userDTO.profileImage.medium
                     fulfillCompletionOnTheMainThread(.success(userDTO.profileImage.medium))
-                    self.postNotification(imageURL: userDTO.profileImage.medium)
+                    self.postNotification()
                     
                 case .failure(let error):
                     print("ProfileService Error: Could not fetch profile image")
@@ -77,10 +77,7 @@ final class ProfileImageService {
         return request
     }
     
-    private func postNotification(imageURL: String) {
-        NotificationCenter.default.post(
-            name: ProfileImageService.didChangeNotification,
-            object: self,
-            userInfo: ["URL": imageURL])
+    private func postNotification() {
+        NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
     }
 }
