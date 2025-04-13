@@ -58,7 +58,6 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
