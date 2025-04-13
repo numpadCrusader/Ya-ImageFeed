@@ -13,6 +13,13 @@ final class OAuth2Service {
     
     static let shared = OAuth2Service()
     
+    // MARK: - Private Properties
+    
+    private let urlSession = URLSession.shared
+    
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     // MARK: - Initializers
     
     private init() {}
@@ -20,34 +27,43 @@ final class OAuth2Service {
     // MARK: - Public Methods
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            print("OAuth2Service Error: Overlapping request")
+            completion(.failure(OAuth2ServiceError.invalidRequest))
+            return
+        }
+
+        task?.cancel()
+        lastCode = code
+        
         guard let tokenRequest = makeOAuthTokenRequest(code: code) else {
-            print("URLRequest Error: Could not create auth token request")
+            print("OAuth2Service Error: Could not create auth token request")
+            completion(.failure(OAuth2ServiceError.invalidRequest))
             return
         }
         
         let fulfillCompletionOnTheMainThread: (Result<String, Error>) -> Void = { result in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 completion(result)
+                self.task = nil
+                self.lastCode = nil
             }
         }
         
-        let task = URLSession.shared.data(for: tokenRequest) { result in
+        let task = urlSession.objectTask(for: tokenRequest) { (result: Result<OAuthTokenDTO, Error>) in
             switch result {
-                case .success(let data):
-                    do {
-                        let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                        fulfillCompletionOnTheMainThread(.success(responseBody.accessToken))
-                    } catch {
-                        print("Decoding Error: Could not decode response body into JSON")
-                        fulfillCompletionOnTheMainThread(.failure(error))
-                    }
+                case .success(let oAuthTokenDTO):
+                    fulfillCompletionOnTheMainThread(.success(oAuthTokenDTO.accessToken))
                     
                 case .failure(let error):
-                    print("Network Error: \(error.stringRepresentation)")
+                    print("OAuth2Service Error: Could not fetch auth token")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }
         
+        self.task = task
         task.resume()
     }
     

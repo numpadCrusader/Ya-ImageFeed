@@ -21,7 +21,7 @@ final class AuthViewController: UIViewController {
     
     private let showWebViewSegueIdentifier = "ShowWebView"
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     
     // MARK: - UIViewController
     
@@ -38,6 +38,20 @@ final class AuthViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
+    
+    // MARK: - Private Properties
+    
+    private func showErrorAlert() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
+        alertController.addAction(okAction)
+
+        present(alertController, animated: true, completion: nil)
+    }
 }
 
 // MARK: - WebViewViewControllerDelegate
@@ -46,8 +60,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
+        UIBlockingProgressHUD.show()
         
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
             
             switch result {
@@ -56,7 +72,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     self.delegate?.didAuthenticate(self)
                     
                 case .failure(_):
-                    print("Error: Could not fetch auth token")
+                    self.showErrorAlert()
             }
         }
     }
