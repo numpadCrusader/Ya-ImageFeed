@@ -17,7 +17,8 @@ final class ImagesListService {
     // MARK: - Private Properties
     
     private let urlSession = URLSession.shared
-    private var task: URLSessionTask?
+    private var fetchPhotoTask: URLSessionTask?
+    private var changeLikeTask: URLSessionTask?
     private var lastLoadedPage: Int?
     
     private var photosIdSet = Set<String>()
@@ -30,7 +31,7 @@ final class ImagesListService {
     // MARK: - Public Methods
     
     func fetchPhotosNextPage(token: String, completion: @escaping (Result<[PhotoDTO], Error>) -> Void) {
-        guard task == nil else {
+        guard fetchPhotoTask == nil else {
             print("ImagesListService Error: Could not create overlapping request")
             completion(.failure(ImagesListServiceError.overlappingRequest))
             return
@@ -47,7 +48,7 @@ final class ImagesListService {
         let fulfillCompletionOnTheMainThread: (Result<[PhotoDTO], Error>) -> Void = { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.task = nil
+                self.fetchPhotoTask = nil
                 completion(result)
             }
         }
@@ -67,7 +68,46 @@ final class ImagesListService {
             }
         }
         
-        self.task = task
+        self.fetchPhotoTask = task
+        task.resume()
+    }
+    
+    func changeLike(token: String, photoId: String, isLike: Bool, _ completion: @escaping (Result<PhotoDTO, Error>) -> Void) {
+        guard changeLikeTask == nil else {
+            print("ImagesListService Error: Could not create overlapping request")
+            completion(.failure(ImagesListServiceError.overlappingRequest))
+            return
+        }
+        
+        guard let changeLikeRequest = makeChangeLikeRequest(token: token, photoId: photoId, isLike: isLike) else {
+            print("ImagesListService Error: Could not create change like request")
+            completion(.failure(ImagesListServiceError.invalidRequest))
+            return
+        }
+
+        let fulfillCompletionOnTheMainThread: (Result<PhotoDTO, Error>) -> Void = { result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.changeLikeTask = nil
+                completion(result)
+            }
+        }
+        
+        let task = urlSession.objectTask(for: changeLikeRequest) { [weak self] (result: Result<PhotoDTO, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+                case .success(let photo):
+                    self.changeLikeForPhoto(photo.id)
+                    fulfillCompletionOnTheMainThread(.success(photo))
+                    
+                case .failure(let error):
+                    print("ImagesListService Error: Could not fetch photos")
+                    fulfillCompletionOnTheMainThread(.failure(error))
+            }
+        }
+        
+        self.changeLikeTask = task
         task.resume()
     }
     
@@ -95,6 +135,19 @@ final class ImagesListService {
         return request
     }
     
+    private func makeChangeLikeRequest(token: String, photoId: String, isLike: Bool) -> URLRequest? {
+        guard let url = URL(string: "\(Constants.unsplashApiBaseURLString)/photos/\(photoId)/like") else {
+            print("URL Error: Change like URL string is corrupted")
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        
+        return request
+    }
+    
     private func appendNewPhotos(_ newPhotosDto: [PhotoDTO]) {
         var newPhotosVM: [PhotoViewModel] = []
         
@@ -111,6 +164,29 @@ final class ImagesListService {
             guard let self = self else { return }
             self.photos.append(contentsOf: newPhotosVM)
             self.postNotification()
+        }
+    }
+    
+    private func changeLikeForPhoto(_ photoId: String) {
+        guard let index = photos.firstIndex(where: { $0.id == photoId }) else {
+            print("ImagesListService Error: Could not find such photo id in inner array")
+            return
+        }
+        
+        let photo = photos[index]
+        
+        let newPhoto = PhotoViewModel(
+            id: photo.id,
+            size: photo.size,
+            createdAt: photo.createdAt,
+            welcomeDescription: photo.welcomeDescription,
+            thumbImageURL: photo.thumbImageURL,
+            largeImageURL: photo.largeImageURL,
+            isLiked: !photo.isLiked)
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.photos[index] = newPhoto
         }
     }
     

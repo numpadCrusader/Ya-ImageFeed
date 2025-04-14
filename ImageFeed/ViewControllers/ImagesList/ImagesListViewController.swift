@@ -21,16 +21,8 @@ final class ImagesListViewController: UIViewController {
     private var imagesListServiceObserver: NSObjectProtocol?
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private let currentDate = Date()
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private var photos: [PhotoViewModel] = []
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
     
     // MARK: - UIViewController
     
@@ -79,7 +71,7 @@ final class ImagesListViewController: UIViewController {
         
         cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString
         
-        let isLiked = indexPath.row % 2 == 0
+        let isLiked = photos[indexPath.row].isLiked
         let likeImageName = isLiked ? "like_button_on" : "like_button_off"
         cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
     }
