@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     
@@ -18,4 +19,13 @@ final class ImagesListCell: UITableViewCell {
     // MARK: - Public Properties
     
     static let reuseIdentifier = "ImagesListCell"
+    
+    // MARK: - UITableViewCell
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        photoView.kf.cancelDownloadTask()
+        dateLabel.text = ""
+    }
 }

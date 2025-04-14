@@ -20,6 +20,7 @@ final class ImagesListService {
     private var task: URLSessionTask?
     private var lastLoadedPage: Int?
     
+    private var photosIdSet = Set<String>()
     private (set) var photos: [PhotoViewModel] = []
     
     // MARK: - Initializers
@@ -59,7 +60,6 @@ final class ImagesListService {
                     self.lastLoadedPage = nextPage
                     self.appendNewPhotos(photos)
                     fulfillCompletionOnTheMainThread(.success(photos))
-                    self.postNotification()
                     
                 case .failure(let error):
                     print("ImagesListService Error: Could not fetch photos")
@@ -96,11 +96,21 @@ final class ImagesListService {
     }
     
     private func appendNewPhotos(_ newPhotosDto: [PhotoDTO]) {
-        let newPhotosVM = newPhotosDto.map { PhotoViewModel(from: $0) }
+        var newPhotosVM: [PhotoViewModel] = []
+        
+        for photoDTO in newPhotosDto {
+            if photosIdSet.contains(photoDTO.id) {
+                continue
+            }
+            
+            photosIdSet.insert(photoDTO.id)
+            newPhotosVM.append(PhotoViewModel(from: photoDTO))
+        }
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.photos.append(contentsOf: newPhotosVM)
+            self.postNotification()
         }
     }
     
