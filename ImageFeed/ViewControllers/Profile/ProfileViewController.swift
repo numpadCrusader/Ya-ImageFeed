@@ -60,6 +60,7 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let profileLogOutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - UIViewController
@@ -72,7 +73,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func didTapLogOutButton() {
-        // TODO: - Добавить логику при нажатии на кнопку
+        profileLogOutService.logout()
     }
     
     // MARK: - Private Methods

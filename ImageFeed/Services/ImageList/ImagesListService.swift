@@ -111,6 +111,12 @@ final class ImagesListService {
         task.resume()
     }
     
+    public func cleanUpService() {
+        lastLoadedPage = nil
+        photos.removeAll()
+        photosIdSet.removeAll()
+    }
+    
     // MARK: - Private Methods
     
     private func makePhotosRequest(token: String, page: Int) -> URLRequest? {
