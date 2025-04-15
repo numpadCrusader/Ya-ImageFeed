@@ -72,8 +72,7 @@ final class ImagesListViewController: UIViewController {
         cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString
         
         let isLiked = photos[indexPath.row].isLiked
-        let likeImageName = isLiked ? "like_button_on" : "like_button_off"
-        cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+        cell.setIsLiked(isLiked)
     }
     
     private func addObserver() {
@@ -87,7 +86,7 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
-    func updateTableViewAnimated() {
+    private func updateTableViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         guard oldCount != newCount else { return }
@@ -120,6 +119,7 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         
         configCell(for: imageListCell, with: indexPath)
+        imageListCell.delegate = self
         
         return imageListCell
     }
@@ -157,5 +157,40 @@ extension ImagesListViewController: UITableViewDelegate {
         }
         
         imagesListService.fetchPhotosNextPage(token: token) { _ in }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    
+    func didTapChangeLikeButton(_ cell: ImagesListCell) {
+        guard 
+            let indexPath = tableView.indexPath(for: cell),
+            let token = oAuth2TokenStorage.token
+        else {
+            return
+        }
+        
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(token: token, photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                case .success(_):
+                    self.photos = self.imagesListService.photos
+                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                    UIBlockingProgressHUD.dismiss()
+                    
+                case .failure(_):
+                    UIBlockingProgressHUD.dismiss()
+                    print("Error: Could not change like for chosen photo")
+                    break
+                    
+            }
+        }
     }
 }

@@ -93,16 +93,16 @@ final class ImagesListService {
             }
         }
         
-        let task = urlSession.objectTask(for: changeLikeRequest) { [weak self] (result: Result<PhotoDTO, Error>) in
+        let task = urlSession.objectTask(for: changeLikeRequest) { [weak self] (result: Result<PhotoDTOWrapper, Error>) in
             guard let self = self else { return }
             
             switch result {
-                case .success(let photo):
-                    self.changeLikeForPhoto(photo.id)
-                    fulfillCompletionOnTheMainThread(.success(photo))
+                case .success(let wrapper):
+                    self.changeLikeForPhoto(wrapper.photo.id)
+                    fulfillCompletionOnTheMainThread(.success(wrapper.photo))
                     
                 case .failure(let error):
-                    print("ImagesListService Error: Could not fetch photos")
+                    print("ImagesListService Error: Could not change like for chosen photo")
                     fulfillCompletionOnTheMainThread(.failure(error))
             }
         }

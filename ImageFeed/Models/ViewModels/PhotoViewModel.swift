@@ -14,7 +14,7 @@ struct PhotoViewModel {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
-    var isLiked: Bool
+    let isLiked: Bool
 }
 
 extension PhotoViewModel {

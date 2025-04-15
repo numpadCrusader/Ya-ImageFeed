@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct PhotoDTOWrapper: Decodable {
+    let photo: PhotoDTO
+}
+
 struct PhotoDTO: Decodable {
     let id: String
     let width: Int
