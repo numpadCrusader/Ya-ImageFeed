@@ -73,7 +73,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func didTapLogOutButton() {
-        profileLogOutService.logout()
+        showLogOutAlert()
     }
     
     // MARK: - Private Methods
@@ -154,5 +154,23 @@ final class ProfileViewController: UIViewController {
             guard let self = self else { return }
             self.updateAvatar()
         }
+    }
+    
+    private func showLogOutAlert() {
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.profileLogOutService.logout()
+        }
+        alertController.addAction(yesAction)
+        
+        let noAction = UIAlertAction(title: "Нет", style: .default) { _ in }
+        alertController.addAction(noAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }

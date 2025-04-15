@@ -101,7 +101,7 @@ final class ImagesListViewController: UIViewController {
     
     private func showError() {
         let alertController = UIAlertController(
-            title: "Что-то пошло не так. Не удалось измениь лайк",
+            title: "Что-то пошло не так. Не удалось изменить лайк",
             message: nil,
             preferredStyle: .alert)
         
