@@ -21,7 +21,6 @@ final class ImagesListViewController: UIViewController {
     private var imagesListServiceObserver: NSObjectProtocol?
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private var photos: [PhotoViewModel] = []
     
     // MARK: - UIViewController
@@ -43,8 +42,7 @@ final class ImagesListViewController: UIViewController {
                 return
             }
 
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
+            viewController.imageURLString = photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -99,6 +97,18 @@ final class ImagesListViewController: UIViewController {
             }
             tableView.insertRows(at: indexPaths, with: .automatic)
         } completion: { _ in }
+    }
+    
+    private func showError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так. Не удалось измениь лайк",
+            message: nil,
+            preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -188,7 +198,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 case .failure(_):
                     UIBlockingProgressHUD.dismiss()
                     print("Error: Could not change like for chosen photo")
-                    break
+                    self.showError()
                     
             }
         }
