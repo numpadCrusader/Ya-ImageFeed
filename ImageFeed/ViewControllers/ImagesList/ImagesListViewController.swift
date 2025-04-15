@@ -67,7 +67,7 @@ final class ImagesListViewController: UIViewController {
             }
         )
         
-        cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString
+        cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString ?? ""
         
         let isLiked = photos[indexPath.row].isLiked
         cell.setIsLiked(isLiked)
