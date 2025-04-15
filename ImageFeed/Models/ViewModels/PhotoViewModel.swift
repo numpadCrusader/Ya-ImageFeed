@@ -24,7 +24,7 @@ extension PhotoViewModel {
         size = CGSize(width: photoDTO.width, height: photoDTO.height)
         createdAt = photoDTO.createdAt.date
         welcomeDescription = photoDTO.description
-        thumbImageURL = photoDTO.urls.thumb
+        thumbImageURL = photoDTO.urls.small
         largeImageURL = photoDTO.urls.regular
         isLiked = photoDTO.likedByUser
     }
