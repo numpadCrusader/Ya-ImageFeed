@@ -20,30 +20,21 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     
     weak var view: WebViewViewControllerProtocol?
     
+    // MARK: - Private Properties
+    
+    private var authHelper: AuthHelperProtocol
+    
+    // MARK: - Initializers
+    
+    init(authHelper: AuthHelperProtocol) {
+        self.authHelper = authHelper
+    }
+    
     // MARK: - WebViewPresenterProtocol
     
     func viewDidLoad() {
-        guard var urlComponents = URLComponents(string: Constants.unsplashAuthorizeURLString) else {
-            print("URLComponents Error: Authorize url string is corrupted")
-            return
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("URLComponents Error: Could not create url from components")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        
+        guard let request = authHelper.authRequest() else { return }
         didUpdateProgressValue(0)
-        
         view?.load(request: request)
     }
     
@@ -56,16 +47,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     }
     
     func code(from url: URL) -> String?{
-        guard let urlComponents = URLComponents(string: url.absoluteString),
-              urlComponents.path == "/oauth/authorize/native",
-              let items = urlComponents.queryItems,
-              let codeItem = items.first(where: { $0.name == "code" })
-        else {
-            print("URLComponents Error: Could not extract \"code\" item from url")
-            return nil
-        }
-        
-        return codeItem.value
+        authHelper.code(from: url)
     }
     
     // MARK: - Public Methods
