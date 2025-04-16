@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ImagesListViewController: UIViewController {
     
@@ -15,16 +16,12 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private let currentDate = Date()
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
+    private let imagesListService = ImagesListService.shared
+    private var imagesListServiceObserver: NSObjectProtocol?
     
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private var photos: [PhotoViewModel] = []
     
     // MARK: - UIViewController
     
@@ -32,6 +29,7 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
 
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        addObserver()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -44,8 +42,7 @@ final class ImagesListViewController: UIViewController {
                 return
             }
 
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
+            viewController.imageURLString = photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -54,16 +51,64 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
+        let avatarURL = photos[indexPath.row].thumbImageURL
+        
+        guard let url = URL(string: avatarURL)
+        else {
             return
         }
         
-        cell.photoView.image = image
-        cell.dateLabel.text = dateFormatter.string(from: currentDate)
+        cell.photoView.kf.indicatorType = .activity
+        cell.photoView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "unloaded_image_card"),
+            completionHandler: { [weak self] _ in
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        )
         
-        let isLiked = indexPath.row % 2 == 0
-        let likeImageName = isLiked ? "like_button_on" : "like_button_off"
-        cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+        cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString ?? ""
+        
+        let isLiked = photos[indexPath.row].isLiked
+        cell.setIsLiked(isLiked)
+    }
+    
+    private func addObserver() {
+        imagesListServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateTableViewAnimated()
+        }
+    }
+    
+    private func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        guard oldCount != newCount else { return }
+        
+        photos = imagesListService.photos
+        
+        tableView.performBatchUpdates {
+            let indexPaths = (oldCount..<newCount).map { i in
+                IndexPath(row: i, section: 0)
+            }
+            tableView.insertRows(at: indexPaths, with: .automatic)
+        } completion: { _ in }
+    }
+    
+    private func showError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так. Не удалось изменить лайк",
+            message: nil,
+            preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -72,7 +117,7 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -84,6 +129,7 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         
         configCell(for: imageListCell, with: indexPath)
+        imageListCell.delegate = self
         
         return imageListCell
     }
@@ -98,15 +144,63 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return 0
-        }
+        let size = photos[indexPath.row].size
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = image.size.width
+        let imageWidth = size.width
         let scale = imageViewWidth / imageWidth
-        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+        let cellHeight = size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard 
+            indexPath.row + 1 == photos.count,
+            let token = oAuth2TokenStorage.token
+        else {
+            return
+        }
+        
+        imagesListService.fetchPhotosNextPage(token: token) { _ in }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    
+    func didTapChangeLikeButton(_ cell: ImagesListCell) {
+        guard 
+            let indexPath = tableView.indexPath(for: cell),
+            let token = oAuth2TokenStorage.token
+        else {
+            return
+        }
+        
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(token: token, photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                case .success(_):
+                    self.photos = self.imagesListService.photos
+                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                    UIBlockingProgressHUD.dismiss()
+                    
+                case .failure(_):
+                    UIBlockingProgressHUD.dismiss()
+                    print("Error: Could not change like for chosen photo")
+                    self.showError()
+                    
+            }
+        }
     }
 }

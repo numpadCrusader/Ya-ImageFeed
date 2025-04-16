@@ -34,6 +34,13 @@ final class OAuth2TokenStorage {
     // MARK: - Initializers
     
     private init() {}
+    
+    // MARK: - Public Methods
+    
+    func cleanUpStorage() {
+        keyChain.removeObject(forKey: Keys.accessToken.rawValue)
+        userDefaults.setValue(false, forKey: Keys.isTokenFresh.rawValue)
+    }
 }
 
 // MARK: - OAuth2TokenStorageProtocol

@@ -58,9 +58,9 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let profileLogOutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - UIViewController
@@ -73,7 +73,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func didTapLogOutButton() {
-        // TODO: - Добавить логику при нажатии на кнопку
+        showLogOutAlert()
     }
     
     // MARK: - Private Methods
@@ -154,5 +154,23 @@ final class ProfileViewController: UIViewController {
             guard let self = self else { return }
             self.updateAvatar()
         }
+    }
+    
+    private func showLogOutAlert() {
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.profileLogOutService.logout()
+        }
+        alertController.addAction(yesAction)
+        
+        let noAction = UIAlertAction(title: "Нет", style: .default) { _ in }
+        alertController.addAction(noAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
