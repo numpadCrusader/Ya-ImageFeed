@@ -9,7 +9,7 @@ import ImageFeed
 import Foundation
 
 final class WebViewViewControllerSpy: WebViewViewControllerProtocol {
-    var loadRequestCalled: Bool = false
+    var loadRequestCalled = false
     var presenter: WebViewPresenterProtocol?
     
     func load(request: URLRequest) {
