@@ -26,6 +26,10 @@ final class TabBarController: UITabBarController {
     
     private func makeProfileViewController() -> UIViewController {
         let profileViewController = ProfileViewController()
+        let profilePresenter = ProfilePresenter()
+        
+        profileViewController.presenter = profilePresenter
+        profilePresenter.view = profileViewController
         
         profileViewController.tabBarItem = UITabBarItem(
             title: "",
