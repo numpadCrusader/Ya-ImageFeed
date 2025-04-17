@@ -10,9 +10,8 @@ import Kingfisher
 
 protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol? { get }
-    
     func configure(_ presenter: ImagesListPresenterProtocol)
-    func performBatchUpdates(in range: Range<Int>)
+    func performBatchUpdates(for range: Range<Int>)
     func reloadTableRow(at row: IndexPath)
     func showLikeChangeError()
     func performSegue(with sender: Any?)
@@ -56,31 +55,6 @@ final class ImagesListViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
-    
-    // MARK: - Private Methods
-    
-    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard 
-            let avatarURL = presenter?.photos[indexPath.row].thumbImageURL,
-            let url = URL(string: avatarURL)
-        else {
-            return
-        }
-        
-        cell.photoView.kf.indicatorType = .activity
-        cell.photoView.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "unloaded_image_card"),
-            completionHandler: { [weak self] _ in
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
-        )
-        
-        cell.dateLabel.text = presenter?.photos[indexPath.row].createdAt?.russianDateString ?? ""
-        
-        let isLiked = presenter?.photos[indexPath.row].isLiked ?? false
-        cell.setIsLiked(isLiked)
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -92,14 +66,16 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let imageListCell = tableView.dequeueReusableCell(
+        guard 
+            let imageListCell = tableView.dequeueReusableCell(
             withIdentifier: ImagesListCell.reuseIdentifier,
-            for: indexPath) as? ImagesListCell
+            for: indexPath) as? ImagesListCell,
+            let viewModel = presenter?.photoViewModel(for: indexPath)
         else {
             return UITableViewCell()
         }
         
-        configCell(for: imageListCell, with: indexPath)
+        imageListCell.configure(with: viewModel)
         imageListCell.delegate = self
         
         return imageListCell
@@ -149,6 +125,14 @@ extension ImagesListViewController: ImagesListCellDelegate {
         
         presenter?.handleLikeTap(at: indexPath, for: cell)
     }
+    
+    func didFinishConfiguring(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
 }
 
 // MARK: - ImagesListViewControllerProtocol
@@ -160,7 +144,7 @@ extension ImagesListViewController: ImagesListViewControllerProtocol {
         self.presenter?.view = self
     }
     
-    func performBatchUpdates(in range: Range<Int>) {
+    func performBatchUpdates(for range: Range<Int>) {
         tableView.performBatchUpdates {
             let indexPaths = range.map { i in
                 IndexPath(row: i, section: 0)

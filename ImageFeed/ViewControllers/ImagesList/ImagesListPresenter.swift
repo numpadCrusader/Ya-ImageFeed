@@ -15,6 +15,7 @@ protocol ImagesListPresenterProtocol {
     func handleLikeTap(at indexPath: IndexPath, for cell: ImagesListCell)
     func fetchPhotosNextPageIfNeeded()
     func didSelectRow(at indexPath: IndexPath)
+    func photoViewModel(for indexPath: IndexPath) -> PhotoViewModel
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
@@ -74,6 +75,10 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         view?.performSegue(with: photos[indexPath.row].largeImageURL)
     }
     
+    func photoViewModel(for indexPath: IndexPath) -> PhotoViewModel {
+        photos[indexPath.row]
+    }
+    
     // MARK: - Private Methods
     
     private func addObserver() {
@@ -93,6 +98,6 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         guard oldCount != newCount else { return }
         
         photos = imagesListService.photos
-        view?.performBatchUpdates(in: oldCount..<newCount)
+        view?.performBatchUpdates(for: oldCount..<newCount)
     }
 }
