@@ -8,20 +8,29 @@
 import UIKit
 import Kingfisher
 
+protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get }
+    
+    func configure(_ presenter: ImagesListPresenterProtocol)
+    func performBatchUpdates(in range: Range<Int>)
+    func reloadTableRow(at row: IndexPath)
+    func showLikeChangeError()
+    func performSegue(with sender: Any?)
+}
+
 final class ImagesListViewController: UIViewController {
     
     // MARK: - IBOutlet
     
     @IBOutlet private var tableView: UITableView!
     
+    // MARK: - Public Properties
+    
+    var presenter: ImagesListPresenterProtocol?
+    
     // MARK: - Private Properties
     
-    private let oAuth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
-    private let imagesListService = ImagesListService.shared
-    private var imagesListServiceObserver: NSObjectProtocol?
-    
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private var photos: [PhotoViewModel] = []
     
     // MARK: - UIViewController
     
@@ -29,20 +38,20 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
 
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        addObserver()
+        presenter?.viewDidLoad()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard
                 let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
+                let imageUrlString = sender as? String
             else {
                 assertionFailure("Invalid segue destination")
                 return
             }
 
-            viewController.imageURLString = photos[indexPath.row].largeImageURL
+            viewController.imageURLString = imageUrlString
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -51,9 +60,9 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let avatarURL = photos[indexPath.row].thumbImageURL
-        
-        guard let url = URL(string: avatarURL)
+        guard 
+            let avatarURL = presenter?.photos[indexPath.row].thumbImageURL,
+            let url = URL(string: avatarURL)
         else {
             return
         }
@@ -67,48 +76,10 @@ final class ImagesListViewController: UIViewController {
             }
         )
         
-        cell.dateLabel.text = photos[indexPath.row].createdAt?.russianDateString ?? ""
+        cell.dateLabel.text = presenter?.photos[indexPath.row].createdAt?.russianDateString ?? ""
         
-        let isLiked = photos[indexPath.row].isLiked
+        let isLiked = presenter?.photos[indexPath.row].isLiked ?? false
         cell.setIsLiked(isLiked)
-    }
-    
-    private func addObserver() {
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            self.updateTableViewAnimated()
-        }
-    }
-    
-    private func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = imagesListService.photos.count
-        guard oldCount != newCount else { return }
-        
-        photos = imagesListService.photos
-        
-        tableView.performBatchUpdates {
-            let indexPaths = (oldCount..<newCount).map { i in
-                IndexPath(row: i, section: 0)
-            }
-            tableView.insertRows(at: indexPaths, with: .automatic)
-        } completion: { _ in }
-    }
-    
-    private func showError() {
-        let alertController = UIAlertController(
-            title: "Что-то пошло не так. Не удалось изменить лайк",
-            message: nil,
-            preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
-        alertController.addAction(okAction)
-        
-        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -117,7 +88,7 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photos.count
+        return presenter?.photos.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -140,11 +111,11 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+        presenter?.didSelectRow(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let size = photos[indexPath.row].size
+        let size = presenter?.photos[indexPath.row].size ?? CGSize.zero
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
@@ -159,14 +130,11 @@ extension ImagesListViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        guard 
-            indexPath.row + 1 == photos.count,
-            let token = oAuth2TokenStorage.token
-        else {
+        guard indexPath.row + 1 == presenter?.photos.count else {
             return
         }
         
-        imagesListService.fetchPhotosNextPage(token: token) { _ in }
+        presenter?.fetchPhotosNextPageIfNeeded()
     }
 }
 
@@ -175,32 +143,49 @@ extension ImagesListViewController: UITableViewDelegate {
 extension ImagesListViewController: ImagesListCellDelegate {
     
     func didTapChangeLikeButton(_ cell: ImagesListCell) {
-        guard 
-            let indexPath = tableView.indexPath(for: cell),
-            let token = oAuth2TokenStorage.token
-        else {
+        guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
         
-        let photo = photos[indexPath.row]
-        
-        UIBlockingProgressHUD.show()
-        imagesListService.changeLike(token: token, photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-                case .success(_):
-                    self.photos = self.imagesListService.photos
-                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
-                    self.tableView.reloadRows(at: [indexPath], with: .none)
-                    UIBlockingProgressHUD.dismiss()
-                    
-                case .failure(_):
-                    UIBlockingProgressHUD.dismiss()
-                    print("Error: Could not change like for chosen photo")
-                    self.showError()
-                    
+        presenter?.handleLikeTap(at: indexPath, for: cell)
+    }
+}
+
+// MARK: - ImagesListViewControllerProtocol
+
+extension ImagesListViewController: ImagesListViewControllerProtocol {
+    
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
+    func performBatchUpdates(in range: Range<Int>) {
+        tableView.performBatchUpdates {
+            let indexPaths = range.map { i in
+                IndexPath(row: i, section: 0)
             }
+            tableView.insertRows(at: indexPaths, with: .automatic)
         }
+    }
+    
+    func reloadTableRow(at row: IndexPath) {
+        tableView.reloadRows(at: [row], with: .none)
+    }
+    
+    func showLikeChangeError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так. Не удалось изменить лайк",
+            message: nil,
+            preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "ОК", style: .default) { _ in }
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func performSegue(with sender: Any?) {
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: sender)
     }
 }
