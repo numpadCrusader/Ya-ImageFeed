@@ -106,6 +106,8 @@ extension ImagesListViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
+        guard !ProcessInfo.processInfo.arguments.contains("UITest") else { return }
+        
         guard indexPath.row + 1 == presenter?.photos.count else {
             return
         }

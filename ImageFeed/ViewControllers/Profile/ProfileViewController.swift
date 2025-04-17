@@ -33,6 +33,7 @@ final class ProfileViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "log_out_button"), for: .normal)
         button.addTarget(self, action: #selector(didTapLogOutButton), for: .touchUpInside)
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
     
@@ -147,10 +148,13 @@ extension ProfileViewController: ProfileViewControllerProtocol {
             message: "Уверены что хотите выйти?",
             preferredStyle: .alert)
         
+        alertController.view.accessibilityIdentifier = "Bye bye!"
+        
         let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self = self else { return }
             self.presenter?.performLogout()
         }
+        yesAction.accessibilityIdentifier = "Yes"
         alertController.addAction(yesAction)
         
         let noAction = UIAlertAction(title: "Нет", style: .default) { _ in }
