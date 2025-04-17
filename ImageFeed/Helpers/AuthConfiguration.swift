@@ -16,3 +16,22 @@ enum Constants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     static let unsplashTokenURLString = "https://unsplash.com/oauth/token"
 }
+
+struct AuthConfiguration {
+    let accessKey: String
+    let secretKey: String
+    let redirectURI: String
+    let accessScope: String
+    let defaultBaseURLString: String
+    let authURLString: String
+    
+    static var standard: AuthConfiguration {
+        return AuthConfiguration(
+            accessKey: Constants.accessKey,
+            secretKey: Constants.secretKey,
+            redirectURI: Constants.redirectURI,
+            accessScope: Constants.accessScope,
+            defaultBaseURLString: Constants.unsplashApiBaseURLString,
+            authURLString: Constants.unsplashAuthorizeURLString)
+    }
+}

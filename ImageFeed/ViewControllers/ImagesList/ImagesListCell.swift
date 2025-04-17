@@ -10,9 +10,10 @@ import Kingfisher
 
 protocol ImagesListCellDelegate: AnyObject {
     func didTapChangeLikeButton(_ cell: ImagesListCell)
+    func didFinishConfiguring(_ cell: ImagesListCell)
 }
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     
     // MARK: - IBOutlet
     
@@ -27,7 +28,7 @@ final class ImagesListCell: UITableViewCell {
     
     // MARK: - UITableViewCell
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
         photoView.kf.cancelDownloadTask()
@@ -39,6 +40,30 @@ final class ImagesListCell: UITableViewCell {
     func setIsLiked(_ isLiked: Bool) {
         let likeImageName = isLiked ? "like_button_on" : "like_button_off"
         likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+    }
+    
+    func configure(with viewModel: PhotoViewModel) {
+        let avatarURLString = viewModel.thumbImageURL
+        
+        guard let url = URL(string: avatarURLString) else {
+            print("URL Error: Could not create url from string")
+            return
+        }
+        
+        photoView.kf.indicatorType = .activity
+        photoView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "unloaded_image_card"),
+            completionHandler: { [weak self] _ in
+                guard let self = self else { return }
+                delegate?.didFinishConfiguring(self)
+            }
+        )
+        
+        dateLabel.text = viewModel.createdAt?.russianDateString ?? ""
+        
+        let isLiked = viewModel.isLiked
+        setIsLiked(isLiked)
     }
     
     // MARK: - IBAction
