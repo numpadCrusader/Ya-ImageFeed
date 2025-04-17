@@ -13,7 +13,7 @@ protocol ImagesListCellDelegate: AnyObject {
     func didFinishConfiguring(_ cell: ImagesListCell)
 }
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     
     // MARK: - IBOutlet
     
@@ -28,7 +28,7 @@ final class ImagesListCell: UITableViewCell {
     
     // MARK: - UITableViewCell
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
         photoView.kf.cancelDownloadTask()

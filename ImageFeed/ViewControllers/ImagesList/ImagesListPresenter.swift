@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ImagesListPresenterProtocol {
+public protocol ImagesListPresenterProtocol {
     var view: ImagesListViewControllerProtocol? { get set }
     var photos: [PhotoViewModel] { get }
     

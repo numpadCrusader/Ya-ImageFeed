@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-protocol ImagesListViewControllerProtocol: AnyObject {
+public protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol? { get }
     func configure(_ presenter: ImagesListPresenterProtocol)
     func performBatchUpdates(for range: Range<Int>)
